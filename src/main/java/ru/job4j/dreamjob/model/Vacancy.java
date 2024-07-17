@@ -19,6 +19,9 @@ public class Vacancy {
         this.description = description;
     }
 
+    public Vacancy() {
+    }
+
     public int getId() {
         return id;
     }
