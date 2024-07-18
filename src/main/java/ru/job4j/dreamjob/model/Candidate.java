@@ -18,6 +18,9 @@ public class Candidate {
         this.description = description;
     }
 
+    public Candidate() {
+    }
+
     public int getId() {
         return id;
     }
