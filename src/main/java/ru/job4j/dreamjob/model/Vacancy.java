@@ -13,10 +13,27 @@ public class Vacancy {
 
     private String title;
 
+    private boolean visible;
+
     public Vacancy(int id, String title, String description) {
         this.id = id;
         this.title = title;
         this.description = description;
+    }
+
+    public Vacancy(int id, String title, String description, boolean visible) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.visible = visible;
+    }
+
+    public Vacancy(int id, String title, String description, LocalDateTime creationDate,  boolean visible) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.visible = visible;
+        this.creationDate = creationDate;
     }
 
     public Vacancy() {
@@ -50,6 +67,18 @@ public class Vacancy {
         return creationDate;
     }
 
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public boolean getVisible() {
+        return visible;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -66,5 +95,4 @@ public class Vacancy {
     public int hashCode() {
         return Objects.hash(id);
     }
-
 }
