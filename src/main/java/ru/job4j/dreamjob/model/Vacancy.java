@@ -7,7 +7,7 @@ public class Vacancy {
 
     private String description;
 
-    private LocalDateTime creationDate = LocalDateTime.now();
+    private LocalDateTime creationDate  = LocalDateTime.now();
 
     private int id;
 
@@ -17,26 +17,17 @@ public class Vacancy {
 
     private int cityId;
 
-    public Vacancy(int id, String title, String description) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-    }
+    private int fileId;
 
-    public Vacancy(int id, String title, String description, boolean visible) {
+    public Vacancy(int id, String title, String description, LocalDateTime creationDate,
+                   boolean visible, int cityId, int fileId) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.visible = visible;
-    }
-
-    public Vacancy(int id, String title, String description, LocalDateTime creationDate,  boolean visible, int cityId) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.visible = visible;
         this.creationDate = creationDate;
+        this.visible = visible;
         this.cityId = cityId;
+        this.fileId = fileId;
     }
 
     public Vacancy() {
@@ -88,6 +79,14 @@ public class Vacancy {
 
     public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public int getFileId() {
+        return fileId;
+    }
+
+    public void setFileId(int fileId) {
+        this.fileId = fileId;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package ru.job4j.dreamjob.model;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Candidate {
 
@@ -14,25 +15,15 @@ public class Candidate {
 
     private int cityId;
 
-    public Candidate(int id, String name, String description) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-    }
+    private int fileId;
 
-    public Candidate(int id, String name, String description, int cityId) {
+    public Candidate(int id, String name, String description, LocalDateTime creationDate, int cityId, int fileId) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.cityId = cityId;
-    }
-
-    public Candidate(int id, String name, String description, LocalDateTime creationDate, int cityId) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.cityId = cityId;
         this.creationDate = creationDate;
+        this.cityId = cityId;
+        this.fileId = fileId;
     }
 
     public Candidate() {
@@ -76,5 +67,30 @@ public class Candidate {
 
     public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public int getFileId() {
+        return fileId;
+    }
+
+    public void setFileId(int fileId) {
+        this.fileId = fileId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Candidate candidate = (Candidate) o;
+        return id == candidate.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

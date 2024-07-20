@@ -4,6 +4,7 @@ import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Repository;
 import ru.job4j.dreamjob.model.Vacancy;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
@@ -19,12 +20,12 @@ public class MemoryVacancyRepository implements VacancyRepository {
     private final Map<Integer, Vacancy> vacancies = new ConcurrentHashMap<>();
 
     private MemoryVacancyRepository() {
-        save(new Vacancy(0, "Intern Java Developer", "Java core"));
-        save(new Vacancy(0, "Junior Java Developer", "Java core + OOP"));
-        save(new Vacancy(0, "Junior+ Java Developer", "Java core + OOP + Lambda + Stream + Collections"));
-        save(new Vacancy(0, "Middle Java Developer", "Java core + OOP + Lambda + Stream + Collections + Git + Threads"));
-        save(new Vacancy(0, "Middle+ Java Developer", "Java core + OOP + Lambda + Stream + Collections + Git + Threads + Spring"));
-        save(new Vacancy(0, "Senior Java Developer", "Microservices"));
+        save(new Vacancy(0, "Intern Java Developer", "Стажер Java разработчик", LocalDateTime.now(), true, 1, 0));
+        save(new Vacancy(0, "Junior Java Developer", "Младший Java разработчик", LocalDateTime.now(), true, 1, 0));
+        save(new Vacancy(0, "Junior+ Java Developer", "Java разработчик", LocalDateTime.now(), true, 2, 0));
+        save(new Vacancy(0, "Middle Java Developer", "Старший Java разработчик", LocalDateTime.now(), true, 2, 0));
+        save(new Vacancy(0, "Middle+ Java Developer", "Ведущий Java разработчик", LocalDateTime.now(), true, 2, 0));
+        save(new Vacancy(0, "Senior Java Developer", "Главный Java разработчик", LocalDateTime.now(), true, 3, 0));
     }
 
     @Override
@@ -43,8 +44,10 @@ public class MemoryVacancyRepository implements VacancyRepository {
     public boolean update(Vacancy vacancy) {
         return vacancies.computeIfPresent(vacancy.getId(), (id, oldVacancy) -> {
             return new Vacancy(
-                    oldVacancy.getId(), vacancy.getTitle(), vacancy.getDescription(),
-                    oldVacancy.getCreationDate(), vacancy.getVisible(), vacancy.getCityId()
+                    oldVacancy.getId(), vacancy.getTitle(),
+                    vacancy.getDescription(), oldVacancy.getCreationDate(),
+                    vacancy.getVisible(), vacancy.getCityId(),
+                    vacancy.getFileId()
             );
         }) != null;
     }

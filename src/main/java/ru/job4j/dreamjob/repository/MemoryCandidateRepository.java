@@ -5,6 +5,7 @@ import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Repository;
 import ru.job4j.dreamjob.model.Candidate;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
@@ -20,12 +21,12 @@ public class MemoryCandidateRepository implements CandidateRepository {
     private final Map<Integer, Candidate> candidates = new ConcurrentHashMap<>();
 
     private MemoryCandidateRepository() {
-        save(new Candidate(0, "Dasha", "Senior"));
-        save(new Candidate(0, "Sasha", "Worked at Microsoft"));
-        save(new Candidate(0, "Masha", "Was a teamlead at Yandex"));
-        save(new Candidate(0, "Grisha", "Can do backflips"));
-        save(new Candidate(0, "Misha", "Completed job4j courses"));
-        save(new Candidate(0, "Yasha", "Need money"));
+        save(new Candidate(0, "Dasha", "Senior", LocalDateTime.now(), 0, 0));
+        save(new Candidate(0, "Sasha", "Worked at Microsoft", LocalDateTime.now(), 1, 0));
+        save(new Candidate(0, "Masha", "Was a teamlead at Yandex", LocalDateTime.now(), 0, 0));
+        save(new Candidate(0, "Grisha", "Can do backflips", LocalDateTime.now(), 1, 0));
+        save(new Candidate(0, "Misha", "Completed job4j courses", LocalDateTime.now(), 2, 0));
+        save(new Candidate(0, "Yasha", "Need money", LocalDateTime.now(), 1, 0));
     }
 
     @Override
@@ -45,7 +46,8 @@ public class MemoryCandidateRepository implements CandidateRepository {
         return candidates.computeIfPresent(candidate.getId(), (id, oldCandidate) -> {
             return new Candidate(
                     oldCandidate.getId(), candidate.getName(),
-                    candidate.getDescription(), oldCandidate.getCreationDate(), candidate.getCityId());
+                    candidate.getDescription(), oldCandidate.getCreationDate(),
+                    candidate.getCityId(), candidate.getFileId());
         }) != null;
     }
 

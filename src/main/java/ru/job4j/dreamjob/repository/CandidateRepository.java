@@ -12,7 +12,7 @@ public interface CandidateRepository {
 
     void deleteById(int id);
 
-    boolean update(Candidate vacancy);
+    boolean update(Candidate candidate);
 
     Optional<Candidate> findById(int id);
 
