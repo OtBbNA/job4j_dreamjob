@@ -58,7 +58,8 @@ public class Sql2oCandidateRepository implements CandidateRepository {
                     .addParameter("description", candidate.getDescription())
                     .addParameter("creationDate", candidate.getCreationDate())
                     .addParameter("cityId", candidate.getCityId())
-                    .addParameter("fileId", candidate.getFileId());
+                    .addParameter("fileId", candidate.getFileId())
+                    .addParameter("id", candidate.getId());
             var affectedRows = query.executeUpdate().getResult();
             return affectedRows > 0;
         }
@@ -69,8 +70,8 @@ public class Sql2oCandidateRepository implements CandidateRepository {
         try (var connection = sql2o.open()) {
             var query = connection.createQuery("SELECT * FROM candidates WHERE id = :id");
             query.addParameter("id", id);
-            var vacancy = query.setColumnMappings(Candidate.COLUMN_MAPPING).executeAndFetchFirst(Candidate.class);
-            return Optional.ofNullable(vacancy);
+            var candidate = query.setColumnMappings(Candidate.COLUMN_MAPPING).executeAndFetchFirst(Candidate.class);
+            return Optional.ofNullable(candidate);
         }
     }
 
