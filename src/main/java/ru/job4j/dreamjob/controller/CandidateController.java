@@ -7,8 +7,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.job4j.dreamjob.dto.FileDto;
 import ru.job4j.dreamjob.model.Candidate;
+import ru.job4j.dreamjob.model.User;
 import ru.job4j.dreamjob.service.CandidateService;
 import ru.job4j.dreamjob.service.CityService;
+
+import javax.servlet.http.HttpSession;
 
 @ThreadSafe
 @Controller
@@ -25,19 +28,22 @@ public class CandidateController {
     }
 
     @GetMapping
-    public String getAll(Model model) {
+    public String getAll(Model model, HttpSession httpSession) {
+        getUser(model, httpSession);
         model.addAttribute("candidates", candidateService.findAll());
         return "candidates/list";
     }
 
     @GetMapping("/create")
-    public String getCreationPage(Model model) {
+    public String getCreationPage(Model model, HttpSession httpSession) {
+        getUser(model, httpSession);
         model.addAttribute("cities", cityService.findAll());
         return "candidates/create";
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute Candidate candidate, @RequestParam MultipartFile file, Model model) {
+    public String create(@ModelAttribute Candidate candidate, @RequestParam MultipartFile file, Model model, HttpSession httpSession) {
+        getUser(model, httpSession);
         try {
             candidateService.save(candidate, new FileDto(file.getOriginalFilename(), file.getBytes()));
             return "redirect:/candidates";
@@ -48,7 +54,8 @@ public class CandidateController {
     }
 
     @GetMapping("/{id}")
-    public String getById(Model model, @PathVariable int id) {
+    public String getById(Model model, @PathVariable int id, HttpSession httpSession) {
+        getUser(model, httpSession);
         var candidateOptional = candidateService.findById(id);
         if (candidateOptional.isEmpty()) {
             model.addAttribute("message", "Кандидат не найден");
@@ -60,7 +67,8 @@ public class CandidateController {
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute Candidate candidate, @RequestParam MultipartFile file, Model model) {
+    public String update(@ModelAttribute Candidate candidate, @RequestParam MultipartFile file, Model model, HttpSession httpSession) {
+        getUser(model, httpSession);
         try {
             var isUpdated = candidateService.update(candidate, new FileDto(file.getOriginalFilename(), file.getBytes()));
             if (!isUpdated) {
@@ -75,12 +83,22 @@ public class CandidateController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(Model model, @PathVariable int id) {
+    public String delete(Model model, @PathVariable int id, HttpSession httpSession) {
+        getUser(model, httpSession);
         if (candidateService.findById(id).isEmpty()) {
             model.addAttribute("message", "Кандидат не найден");
             return "errors/404";
         }
         candidateService.deleteById(id);
         return "redirect:/candidates";
+    }
+
+    private void getUser(Model model, HttpSession httpSession) {
+        var user = (User) httpSession.getAttribute("user");
+        if (user == null) {
+            user = new User();
+            user.setName("Гость");
+        }
+        model.addAttribute("user", user);
     }
 }
