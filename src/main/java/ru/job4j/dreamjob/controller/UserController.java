@@ -33,10 +33,10 @@ public class UserController {
     public String register(Model model, @ModelAttribute User user) {
         var savedUser = userService.save(user);
         if (savedUser.isEmpty()) {
-                model.addAttribute("message", "Пользователь с такой почтой уже существует");
-                return "users/register";
-            }
-        return "index";
+            model.addAttribute("message", "Пользователь с такой почтой уже существует");
+            return "errors/404";
+        }
+        return "redirect:/vacancies";
     }
 
     @GetMapping("/login")

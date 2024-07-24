@@ -1,5 +1,7 @@
 package ru.job4j.dreamjob.repository;
 
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.sql2o.Sql2o;
 import ru.job4j.dreamjob.model.User;
@@ -11,6 +13,8 @@ import java.util.Optional;
 public class Sql2oUserRepository implements UserRepository {
 
     private final Sql2o sql2o;
+
+    private static final Logger LOG = LoggerFactory.getLogger(Sql2oUserRepository.class);
 
     public Sql2oUserRepository(Sql2o sql2o) {
         this.sql2o = sql2o;
@@ -31,7 +35,7 @@ public class Sql2oUserRepository implements UserRepository {
             user.setId(generatedId);
             return Optional.of(user);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error(() -> "Пользователь с такой почтой уже зарегистрирован");
         }
         return Optional.empty();
     }
@@ -47,6 +51,7 @@ public class Sql2oUserRepository implements UserRepository {
         }
     }
 
+    @Override
     public boolean deleteByEmail(String email) {
         try (var connection = sql2o.open()) {
             var query = connection.createQuery(
@@ -57,6 +62,7 @@ public class Sql2oUserRepository implements UserRepository {
         }
     }
 
+    @Override
     public Collection<User> findAll() {
         try (var connection = sql2o.open()) {
             var query = connection.createQuery("select * from users");
