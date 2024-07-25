@@ -27,19 +27,19 @@ public class CandidateController {
     }
 
     @GetMapping
-    public String getAll(Model model, HttpSession httpSession) {
+    public String getAll(Model model) {
         model.addAttribute("candidates", candidateService.findAll());
         return "candidates/list";
     }
 
     @GetMapping("/create")
-    public String getCreationPage(Model model, HttpSession httpSession) {
+    public String getCreationPage(Model model) {
         model.addAttribute("cities", cityService.findAll());
         return "candidates/create";
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute Candidate candidate, @RequestParam MultipartFile file, Model model, HttpSession httpSession) {
+    public String create(@ModelAttribute Candidate candidate, @RequestParam MultipartFile file, Model model) {
         try {
             candidateService.save(candidate, new FileDto(file.getOriginalFilename(), file.getBytes()));
             return "redirect:/candidates";
@@ -50,7 +50,7 @@ public class CandidateController {
     }
 
     @GetMapping("/{id}")
-    public String getById(Model model, @PathVariable int id, HttpSession httpSession) {
+    public String getById(Model model, @PathVariable int id) {
         var candidateOptional = candidateService.findById(id);
         if (candidateOptional.isEmpty()) {
             model.addAttribute("message", "Кандидат не найден");
@@ -62,7 +62,7 @@ public class CandidateController {
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute Candidate candidate, @RequestParam MultipartFile file, Model model, HttpSession httpSession) {
+    public String update(@ModelAttribute Candidate candidate, @RequestParam MultipartFile file, Model model) {
         try {
             var isUpdated = candidateService.update(candidate, new FileDto(file.getOriginalFilename(), file.getBytes()));
             if (!isUpdated) {
@@ -77,12 +77,11 @@ public class CandidateController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(Model model, @PathVariable int id, HttpSession httpSession) {
-        if (candidateService.findById(id).isEmpty()) {
-            model.addAttribute("message", "Кандидат не найден");
-            return "errors/404";
+    public String delete(Model model, @PathVariable int id) {
+        if (candidateService.deleteById(id)) {
+            return "redirect:/candidates";
         }
-        candidateService.deleteById(id);
-        return "redirect:/candidates";
+        model.addAttribute("message", "Кандидат не найден");
+        return "errors/404";
     }
 }

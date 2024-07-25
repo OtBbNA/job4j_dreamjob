@@ -32,12 +32,15 @@ public class SimpleCandidateService implements CandidateService {
     }
 
     @Override
-    public void deleteById(int id) {
+    public boolean deleteById(int id) {
+        boolean rsl = false;
         var fileOptional = findById(id);
         if (fileOptional.isPresent()) {
             candidateRepository.deleteById(id);
             fileService.deleteById(fileOptional.get().getFileId());
+            rsl = true;
         }
+        return rsl;
     }
 
     @Override
